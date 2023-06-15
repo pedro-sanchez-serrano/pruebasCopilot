@@ -1,1 +1,56 @@
+class NQueens:
+    def __init__(self, n):
+        self.n = n
+        self.board = [[0]*n for _ in range(n)]
 
+    def is_safe(self, row, col):
+        # Check if there is a Queen in the same row
+        for i in range(self.n):
+            if self.board[row][i] == 1:
+                return False
+
+        # Check if there is a Queen in the same column
+        for i in range(self.n):
+            if self.board[i][col] == 1:
+                return False
+
+        # Check if there is a Queen in the upper left diagonal
+        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+            if self.board[i][j] == 1:
+                return False
+
+        # Check if there is a Queen in the upper right diagonal
+        for i, j in zip(range(row, -1, -1), range(col, self.n)):
+            if self.board[i][j] == 1:
+                return False
+
+        return True
+
+    def solve(self, col):
+        # Base case: All Queens have been placed
+        if col == self.n:
+            return True
+
+        # Recursively place Queens in each column
+        for row in range(self.n):
+            if self.is_safe(row, col):
+                self.board[row][col] = 1
+
+                # Recursively place Queens in the next column
+                if self.solve(col + 1):
+                    return True
+
+                # Backtrack and remove the Queen if it does not lead to a solution
+                self.board[row][col] = 0
+
+        # Return False if no solution is found
+        return False
+
+    def print_board(self):
+        for row in self.board:
+            print(row)
+
+
+n_queens = NQueens(8)
+n_queens.solve(0)
+n_queens.print_board()
